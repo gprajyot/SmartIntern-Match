@@ -1,0 +1,12 @@
+Flask
+flask-cors
+flask-jwt-extended
+flask-bcrypt
+firebase-admin
+google-cloud-firestore
+python-dotenv
+requests
+itsdangerous
+APScheduler
+gunicorn
+scikit-learn
