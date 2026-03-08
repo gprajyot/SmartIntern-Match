@@ -18,24 +18,21 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 
 def create_app():
-
     app = Flask(__name__)
 
-    # 🔥 Load SECRET KEY from .env
+    # Load secret key
     secret_key = os.getenv("SECRET_KEY")
 
     if not secret_key:
-        raise RuntimeError("SECRET_KEY not found in .env file")
+        raise RuntimeError("SECRET_KEY not found in environment variables")
 
     app.config["SECRET_KEY"] = secret_key
     app.config["JWT_SECRET_KEY"] = secret_key
 
-    print("SECRET KEY:", app.config["SECRET_KEY"])
-
     JWTManager(app)
     CORS(app)
 
-    # 🔥 Register Blueprints
+    # Register Blueprints
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(internship_bp, url_prefix="/api/internships")
     app.register_blueprint(student_bp, url_prefix="/api/student")
@@ -43,14 +40,16 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix="/api/admin")
     app.register_blueprint(chatbot_bp, url_prefix="/api/chatbot")
 
-    start_scheduler()
-
     return app
 
 
 app = create_app()
 
 
+# Start scheduler only once
+if os.environ.get("RENDER"):
+    start_scheduler()
+
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=10000)
